@@ -53,7 +53,8 @@ def add_nucleotide(sequence, nucleotide, value):
 def main():
     sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 12, 4)
     print(sequence.sequence)
-    sequence.remove_nucleotide("ATCG")
+    print(sequence.get_remove_score(2))
+    print(sequence.remove_nucleotide(2))
     print(sequence.sequence)
     return
     print(generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 12, 4))
