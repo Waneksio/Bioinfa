@@ -96,3 +96,29 @@ class Sequence:
         offset = self.rebuild_sequence(sub_sequence_a, sub_sequence_b)
         for nucleotide in self.nucleotides_order:
             nucleotide[1] += offset
+
+    def cluster(self):
+        clustered_sequence = []
+        sequence_copy = self.nucleotides_order[:]
+        for i in range(len(sequence_copy)):
+            if i+1 >= len(sequence_copy):
+                if i==len(sequence_copy):
+                    return clustered_sequence
+                clustered_sequence.append(sequence_copy[i])
+                print(clustered_sequence)
+                print("XD")
+                return clustered_sequence
+            if sequence_copy[i+1][1] - sequence_copy[i][1] == 1:
+                clustered_nucleotide = sequence_copy[i]
+                clustered_nucleotide[0] = sequence_copy[i][0] + sequence_copy[i+1][0][-1]
+                clustered_sequence.append(clustered_nucleotide)
+                del sequence_copy[i+1]
+            else:
+                clustered_sequence.append(sequence_copy[i])
+            print(clustered_sequence)
+
+    def remove_oli_at_position(self, position):
+        for i in self.nucleotides_order:
+            if i[1] == position:
+                del i
+                return

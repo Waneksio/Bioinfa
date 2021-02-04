@@ -55,11 +55,13 @@ def main():
     sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 25, 4)
     print(sequence.sequence)
     print(sequence.nucleotides_order)
-    sequence.condensation()
+    sequence.cluster()
+    #sequence.condensation()
     print(sequence.sequence)
     return
     sequence.condensation()
     print(sequence.sequence)
+
     return 0
 
 
