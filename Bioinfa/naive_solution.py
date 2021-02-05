@@ -1,6 +1,7 @@
 import random
 from Nucleotide import Nucleotide
 from Sequence import Sequence
+import Generator as gen
 
 
 def generate_naive_solution(oli_nucleotides, required_length, k):
@@ -53,14 +54,19 @@ def add_nucleotide(sequence, nucleotide, value):
 
 def main():
     sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 25, 4)
-    print(sequence.sequence)
-    print(sequence.nucleotides_order)
-    sequence.cluster()
+#    print(sequence.sequence)
+#    print(sequence.nucleotides_order)
+#    sequence.cluster()
     #sequence.condensation()
-    print(sequence.sequence)
+#    print(sequence.sequence)
+    random = gen.generate_random_test_sequence(50)
+    print(random)
+    digested = gen.snip_snap(4, 20,random)
+    for i in digested:
+        print(i)
     return
     sequence.condensation()
-    print(sequence.sequence)
+#    print(sequence.sequence)
 
     return 0
 
