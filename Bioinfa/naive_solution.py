@@ -4,7 +4,7 @@ from Sequence import Sequence
 
 
 def generate_naive_solution(oli_nucleotides, required_length, k):
-    sequence = Sequence(oli_nucleotides[0])
+    sequence = Sequence(oli_nucleotides[0], required_length)
     sequence.initialize_tabu_list(oli_nucleotides)
     while sequence.get_len() < required_length:
         values = get_values_2(sequence.sequence, oli_nucleotides)
@@ -52,12 +52,15 @@ def add_nucleotide(sequence, nucleotide, value):
 
 
 def main():
-    sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 25, 4)
+    sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 60, 4)
     print(sequence.sequence)
     print(sequence.nucleotides_order)
-    sequence.cluster()
-    #sequence.condensation()
+    sequence.condensation()
     print(sequence.sequence)
+    print(sequence.nucleotides_order)
+    sequence.extension()
+    print(sequence.sequence)
+    print(sequence.nucleotides_order)
     return
     sequence.condensation()
     print(sequence.sequence)

@@ -1,5 +1,6 @@
 class Sequence:
-    def __init__(self, initial_oli_nucleotide):
+    def __init__(self, initial_oli_nucleotide, desired_length):
+        self.desired_length = desired_length
         self.sequence = initial_oli_nucleotide
         self.nucleotides_order = [[initial_oli_nucleotide, 0]]
         self.tabu_list = {}
@@ -14,6 +15,7 @@ class Sequence:
         for i in range(k):
             if nucleotide.find(self.sequence[n - k + i + 1:]) == 0:
                 return i + 1
+        return k
 
     def add_nucleotide(self, nucleotide):
         self.sequence += nucleotide[len(nucleotide) - self.get_nucleotide_value(nucleotide):]
@@ -31,10 +33,11 @@ class Sequence:
         return len(self.nucleotides_order[0][0])
 
     def rebuild_sequence(self, subsequence_a, subsequence_b):
+        length = self.get_len()
         self.sequence = subsequence_a
         value_b = self.get_nucleotide_value(subsequence_b[:self.get_nucleotide_length()])
         self.sequence += subsequence_b[self.get_nucleotide_length() - value_b:]
-        offset = self.get_len() - len(subsequence_b)
+        offset = length - self.get_len()
         return offset
 
     @staticmethod
@@ -73,11 +76,22 @@ class Sequence:
             return result
         return None
 
+    def get_lest_frequent_element(self):
+        return min(self.tabu_list, key=lambda x: x[1])
+
+    def extension(self):
+        while self.get_len() < self.desired_length:
+            least_frequent_element = self.get_lest_frequent_element()
+            self.add_nucleotide(least_frequent_element)
+            self.tabu_list[least_frequent_element] += 1
+
     def condensation(self):
         element_to_remove = self.get_element_to_remove()
         while element_to_remove:
             print(element_to_remove)
+            self.tabu_list[self.nucleotides_order[element_to_remove][0]] += 1
             self.remove_nucleotide(element_to_remove)
+            print(self.nucleotides_order)
             element_to_remove = self.get_element_to_remove()
 
     def remove_nucleotide(self, index):
@@ -94,8 +108,10 @@ class Sequence:
         sub_sequence_b = self.sequence[next_nucleotide[1]:]
         self.nucleotides_order.pop(index)
         offset = self.rebuild_sequence(sub_sequence_a, sub_sequence_b)
-        for nucleotide in self.nucleotides_order:
-            nucleotide[1] += offset
+
+        for i in range(self.get_nucleotides_count()):
+            if i >= index:
+                self.nucleotides_order[i][1] -= offset
 
     def cluster(self):
         clustered_sequence = []
