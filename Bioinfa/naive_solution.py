@@ -1,4 +1,5 @@
 import random
+import numpy as np
 from Nucleotide import Nucleotide
 from Sequence import Sequence
 import Generator as gen
@@ -51,6 +52,50 @@ def add_nucleotide(sequence, nucleotide, value):
     result = sequence
     return result
 
+def get_Lev_distance(real_sequence, solution_sequence):
+    if real_sequence == '' or real_sequence == None:
+        if solution_sequence == ''or solution_sequence == None:
+            return
+        return len(solution_sequence)
+    if solution_sequence == ''or solution_sequence == None:
+        return len(real_sequence)
+
+    n = len(real_sequence)
+    m = len(solution_sequence)
+    distances = np.zeros((n + 1, m + 1))
+    for t1 in range(n+1):
+        distances[t1][0] = t1
+    for t2 in range(m+1):
+        distances[0][t2] = t2
+
+    a = 0
+    b = 0
+    c = 0
+
+    for t1 in range(1, n + 1):
+        for t2 in range(1, m + 1):
+            if (real_sequence[t1 - 1] == solution_sequence[t2 - 1]):
+                distances[t1][t2] = distances[t1 - 1][t2 - 1]
+            else:
+                a = distances[t1][t2 - 1]
+                b = distances[t1 - 1][t2]
+                c = distances[t1 - 1][t2 - 1]
+
+                if (a <= b and a <= c):
+                    distances[t1][t2] = a + 1
+                elif (b <= a and b <= c):
+                    distances[t1][t2] = b + 1
+                else:
+                    distances[t1][t2] = c + 1
+
+    for t1 in range(n + 1):
+        for t2 in range(m + 1):
+            print(int(distances[t1][t2]), end=" ")
+        print()
+    return distances[n][m]
+
+
+
 
 def main():
     sequence = generate_naive_solution(["ATCG", "TCGG", "GATG", "GGGT", "AGTA"], 25, 4)
@@ -59,11 +104,13 @@ def main():
 #    sequence.cluster()
     #sequence.condensation()
 #    print(sequence.sequence)
-    random = gen.generate_random_test_sequence(50)
-    print(random)
-    digested = gen.snip_snap(4, 20,random)
-    for i in digested:
-        print(i)
+#    random = gen.generate_random_test_sequence(50)
+#    print(random)
+#    digested = gen.snip_snap(4, 20,random)
+    distance = get_Lev_distance('kelm','hello')
+    print(int(distance))
+#    for i in digested:
+ #       print(i)
     return
     sequence.condensation()
 #    print(sequence.sequence)
