@@ -23,4 +23,9 @@ def snip_snap(oli_len, num_snips, sequence):
         snippet = sequence[snip_seed:snip_seed+oli_len]
         if snippet not in digested:
             digested.append(snippet)
-    return digested
+    with open('./test_instance.txt', "w") as f:
+        f.write(sequence)
+        for snip in digested:
+            f.write("\n" + snip)
+
+

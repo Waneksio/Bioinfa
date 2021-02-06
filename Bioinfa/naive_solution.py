@@ -5,6 +5,7 @@ from Sequence import Sequence
 import Generator as gen
 import copy
 import time
+import os.path
 
 
 def check_length(sequences, required_length):
@@ -117,8 +118,22 @@ def main():
     k = 8
     m = 190
     n = 200
-    radom = gen.generate_random_test_sequence(n)
-    digested = gen.snip_snap(k, m, radom)
+
+    digested = []
+
+    if os.path.exists('./test_instance.txt'):
+        print('XD')
+        with open('test_instance.txt') as f:
+            for count, line in enumerate(f, start=1):
+                print(line)
+                if count == 1:
+                    radom = line
+                else:
+                    digested.append(line[:-1])
+    else:
+        radom = gen.generate_random_test_sequence(n)
+        gen.snip_snap(k, m, radom)
+    print(digested)
 
     start_time = time.time()
     sequences = generate_naive_solution(digested, n, k, 10)
