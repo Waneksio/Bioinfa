@@ -1,13 +1,14 @@
+import random
+
+
 class Sequence:
-    def __init__(self, initial_oli_nucleotide, desired_length):
+    def __init__(self, initial_oli_nucleotide, desired_length, oligos):
         self.desired_length = desired_length
         self.sequence = initial_oli_nucleotide
         self.nucleotides_order = [[initial_oli_nucleotide, 0]]
-        self.tabu_list = {}
-
-    def initialize_tabu_list(self, initial_nucleotides):
-        for nucleotide in initial_nucleotides:
-            self.tabu_list[nucleotide] = 0
+        self.tabu_list = []
+        self.all_oligos = oligos
+        self.tabu_length = int(len(oligos) / 10)
 
     def get_nucleotide_value(self, nucleotide):
         n = len(self.sequence)
@@ -76,22 +77,27 @@ class Sequence:
             return result
         return None
 
-    def get_lest_frequent_element(self):
-        return min(self.tabu_list, key=lambda x: x[1])
+    def get_least_frequent_element(self):
+        result = random.choice(self.all_oligos)
+        while result in self.tabu_list:
+            result = random.choice(self.all_oligos)
+        return result
 
     def extension(self):
         while self.get_len() < self.desired_length:
-            least_frequent_element = self.get_lest_frequent_element()
+            least_frequent_element = self.get_least_frequent_element()
             self.add_nucleotide(least_frequent_element)
-            self.tabu_list[least_frequent_element] += 1
+            self.tabu_list.append(least_frequent_element)
+            if len(self.tabu_list) > self.tabu_length:
+                self.tabu_list.pop(0)
 
     def condensation(self):
         element_to_remove = self.get_element_to_remove()
         while element_to_remove:
-            print(element_to_remove)
-            self.tabu_list[self.nucleotides_order[element_to_remove][0]] += 1
+            self.tabu_list.append(self.nucleotides_order[element_to_remove][0])
+            if len(self.tabu_list) > self.tabu_length:
+                self.tabu_list.pop(0)
             self.remove_nucleotide(element_to_remove)
-            print(self.nucleotides_order)
             element_to_remove = self.get_element_to_remove()
 
     def remove_nucleotide(self, index):
@@ -121,8 +127,6 @@ class Sequence:
                 if i==len(sequence_copy):
                     return clustered_sequence
                 clustered_sequence.append(sequence_copy[i])
-                print(clustered_sequence)
-                print("XD")
                 return clustered_sequence
             if sequence_copy[i+1][1] - sequence_copy[i][1] == 1:
                 clustered_nucleotide = sequence_copy[i]
@@ -131,7 +135,6 @@ class Sequence:
                 del sequence_copy[i+1]
             else:
                 clustered_sequence.append(sequence_copy[i])
-            print(clustered_sequence)
 
     def remove_oli_at_position(self, position):
         for i in self.nucleotides_order:
